@@ -1,4 +1,4 @@
-# Local Conditional Distribution Estimation for Weather-Driven Spread Prediction
+# Local Conditional Distribution Estimation for Weather-Driven Spread 
 ### Overall Pipeline
 ```mermaid
 flowchart LR
@@ -28,7 +28,7 @@ flowchart LR
 
 ## Abstract
 
-This project develops a local probabilistic framework for short-horizon spread prediction in electricity markets under weather uncertainty. Rather than modelling the task as a generic binary classification problem, the method is formulated as a problem of **local conditional distribution estimation**. The central object of interest is not merely the sign of the future spread, but the local law of the spread conditional on the current weather state, weather trend, forecast revision path, and market context.
+This project develops a local probabilistic framework for short-horizon spread in electricity markets under weather uncertainty. Rather than modelling the task as a generic binary classification problem, the method is formulated as a problem of **local conditional distribution estimation**. The central object of interest is not merely the sign of the future spread, but the local law of the spread conditional on the current weather state, weather trend, forecast revision path, and market context. 
 
 At each target time $t$, let
 
