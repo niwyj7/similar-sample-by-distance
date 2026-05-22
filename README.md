@@ -1,7 +1,5 @@
 # Local Conditional Distribution Estimation for Weather-Driven Spread 
 
-Note: All materials **exclude** confidential and employer-specific business logic, and are permitted for sharing.
-
 ### Overall Pipeline
 ```mermaid
 flowchart LR
