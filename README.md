@@ -26,7 +26,7 @@ flowchart LR
 
 ```
 
-## Abstract
+## Introduction
 
 This project develops a local probabilistic framework for short-horizon spread in electricity markets under weather uncertainty. Rather than modelling the task as a generic binary classification problem, the method is formulated as a problem of **local conditional distribution estimation**. The central object of interest is not merely the sign of the future spread, but the local law of the spread conditional on the current weather state, weather trend, forecast revision path, and market context. 
 
@@ -179,17 +179,6 @@ X_t^{\text{market}},
 X_t^{\text{regime}}
 \right).
 $$
-
-The decomposition is as follows:
-
-- **Weather level features**: current forecast values such as temperature, humidity, pressure, wind components, wind speed, and cloud-related variables.
-- **Weather trend features**: local differences, rolling averages, rolling volatilities, and local slopes.
-- **Forecast revision features**: differences between forecasts issued at different lead times for the same delivery timestamp.
-- **Market context features**: lagged spread, recent spread statistics, and order-book state variables.
-- **Regime features**: hour-of-day, weekend/weekday indicators, peak-hour labels, and related conditioning variables.
-
-This decomposition reflects an important modelling hypothesis: the market reacts not only to the weather state itself, but also to the **dynamic information structure** through which that state is revealed.
-
 
 ## 3. Local Conditional Distribution Estimation
 
@@ -443,7 +432,7 @@ Here $R$ may denote:
 This motivates restricting the candidate neighbourhood to regime-consistent subsets before local estimation. Statistically, this reduces mixture bias and makes the local empirical distribution more homogeneous.
 
 
-## 9. Why Forecast Revisions Matter
+## 9. Forecast Revisions （optional）
 
 Let
 
@@ -507,124 +496,6 @@ This separates the framework into two layers:
 This separation is mathematically important. A good estimator of local probability is not the same object as an optimal decision rule. The latter depends on asymmetric costs, signal sparsity, and risk preferences.
 
 
-## 12. Improvements over the Original Statistical Formulation
-
-The original prototype was based on:
-
-- a fixed similarity threshold,
-- point estimates of mutual-information-based feature weights,
-- and raw empirical local frequencies.
-
-The revised framework introduces several statistically motivated improvements.
-
-### 12.1 Adaptive local sampling replaces fixed thresholds
-
-Original issue:
-
-- a fixed radius does not correspond to a fixed degree of statistical reliability,
-- local density varies across hours, seasons, and regimes.
-
-Improvement:
-
-- top-k, adaptive-radius, or hybrid neighbourhoods.
-
-### 12.2 Beta-Binomial shrinkage replaces raw local frequencies
-
-Original issue:
-
-- small local neighbourhoods produce highly unstable probability estimates,
-- extreme probabilities may simply reflect sampling noise.
-
-Improvement:
-
-- posterior shrinkage toward the global prior using effective sample size.
-
-### 12.3 Covariance-aware geometry replaces naive Euclidean similarity
-
-Original issue:
-
-- correlated weather features are effectively overcounted,
-- Similarity is distorted by the covariance structure.
-
-Improvement:
-
-- whitened Mahalanobis distance.
-
-In correlated feature spaces, Euclidean distance overweights redundant directions. Mahalanobis distance accounts for covariance structure and yields neighbourhoods that are more meaningful for local conditional inference.
-
-<div align="center">
-  <img width="1000" height="426" alt="image" src="https://github.com/user-attachments/assets/ddddc81c-2067-4c74-9c7a-2320f09db2b6" />
-</div>
-
-
-### 12.4 Forecast revision dynamics are added to the state space
-
-Original issue:
-
-- level-only weather features ignore the information update process,
-- The market may respond primarily to changes in expectations.
-
-Improvement:
-
-- explicit use of forecast revision and revision-acceleration variables.
-
-### 12.5 Time decay addresses nonstationarity
-
-Original issue:
-
-- old observations may be structurally less relevant even if geometrically close.
-
-Improvement:
-
-- temporal discounting in local weights.
-
-### 12.6 Similarity is evaluated through distributional fit
-
-Original issue:
-
-- geometric closeness alone does not guarantee predictive usefulness.
-
-Improvement:
-
-- evaluate neighbourhoods by response concentration, purity, variance reduction, and calibration.
-
-
-## 13. Connection to Mathematical Areas
-
-This framework sits at the intersection of several mathematical areas.
-
-- Probability and Statistics
-
-- Stochastic Processes
-
-- Optimisation
-
-- Geometric Data Analysis
-
-
-## 14. Why This Framework Is Research-Relevant
-
-This framework is interesting not only because it may produce useful trading signals, but because it provides a mathematically interpretable answer to the following question:
-
-> Given the current weather state and the path by which forecasts evolved, what is the locally implied probability law of the future spread?
-
-Instead of fitting a purely black-box predictor, the method explicitly constructs:
-
-- a state representation,
-- a similarity geometry,
-- a local empirical distribution,
-- a shrinkage-adjusted probability estimate,
-- and a decision map.
-
-This makes it well-suited for research contexts in which interpretability, local reasoning, and probabilistic structure are as important as predictive performance.
-
-The market may react not only to forecast levels but also to how those forecasts are revised over time. Revision features encode the path of information updates and enrich the state representation beyond static weather levels.
-
-<div align="center">
-  <img width="928" height="424" alt="image" src="https://github.com/user-attachments/assets/155ca137-a94b-4e6d-bb0b-fb9abac05a94" />
-</div>
-
-
 
 ## Conclusion
 
@@ -637,17 +508,3 @@ Its key contributions are:
 - using covariance-aware similarity geometry,
 - stabilising local probability estimates via Beta-Binomial shrinkage,
 - and accounting for nonstationarity through time decay.
-
-In short, the framework is designed to answer not simply
-
-$$
-\text{“Will the next spread be positive or negative?”}
-$$
-
-but rather
-
-$$
-\text{“What is the local probability law of the spread under the current weather information state?”}
-$$
-
-That shift in perspective is the main mathematical contribution of the method.
